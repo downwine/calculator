@@ -56,16 +56,28 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'subtract':
             case 'multiply':
             case 'divide':
+                console.log(operator)
                 if (operator) {
                     // console.log(currentValue)
                     const parts = currentValue.split(getOperatorSymbol(operator));
-                    if (parts.length < 2 || !parts[1]) break;
-                    calculate();
+                    if (parts[1] || parts[1] === '0') { 
+                        calculate();
+                    }
                 }
                 // console.log(previousValue)
                 // previousValue = currentValue;
+                // debugger
+                if(!operator) {
+                    currentValue = currentValue + getOperatorSymbol(action)
+                }
+                else if (operator !== action) {
+                    debugger
+                    // замена оператора
+                    if(currentValue[0] !== '-') {
+                        currentValue = currentValue + getOperatorSymbol(action)
+                    } else currentValue = currentValue.substring(0, currentValue.length - 1) + getOperatorSymbol(action)
+                }
                 operator = action;
-                currentValue = currentValue + getOperatorSymbol(action);
                 break;
             case 'decimal':
                 if (canAddDecimal(currentValue)) {
@@ -87,7 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const operatorSymbol = getOperatorSymbol(operator);
         const parts = currentValue.split(operatorSymbol);
         if (parts.length < 2 || !parts[1]) return;
-
         const prev = parseFloat(parts[0]);
         const current = parseFloat(parts[1]);
         switch (operator) {
