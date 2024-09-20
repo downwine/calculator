@@ -41,3 +41,15 @@ body {
     user-select: none;
     transition: background-color 0.3s;
 }
+
+.button[data-action="clear"] {
+    background-color: #ff6666;
+}
+
+.button[data-action="equals"] {
+    background-color: #66ff66;
+}
+
+.button[data-action="backspace"] {
+    background-color: #ffcc66;
+}
