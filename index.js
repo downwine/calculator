@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         switch (action) {
             case 'clear':
                 currentValue = '0';
-                // previousValue = '';
+                previousValue = '';
                 operator = null;
                 break;
             case 'backspace':
@@ -57,6 +57,9 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'multiply':
             case 'divide':
                 if (operator) {
+                    // console.log(currentValue)
+                    const parts = currentValue.split(getOperatorSymbol(operator));
+                    if (parts.length < 2 || !parts[1]) break;
                     calculate();
                 }
                 // console.log(previousValue)
@@ -75,13 +78,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     operator = null;
                 }
                 break;
+            default:
+                break;
         }
     }
 
     function calculate() {
         const operatorSymbol = getOperatorSymbol(operator);
         const parts = currentValue.split(operatorSymbol);
-        if (parts.length < 2) return;
+        if (parts.length < 2 || !parts[1]) return;
 
         const prev = parseFloat(parts[0]);
         const current = parseFloat(parts[1]);
@@ -96,6 +101,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentValue = String(prev * current);
                 break;
             case 'divide':
+                if(current === 0) {
+                    alert('На ноль делить нельзя')
+                    currentValue = String(prev);
+                    break
+                  }
                 currentValue = String(prev / current);
                 break;
         }
@@ -112,6 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 return '*';
             case 'divide':
                 return '/';
+            default:
+                return '';
         }
     }
 
@@ -126,6 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const parts = value.split(operatorSymbol);
         const currentPart = parts[parts.length - 1];
+        if(!currentPart) return false
         return !currentPart.includes('.');
     }
 });
