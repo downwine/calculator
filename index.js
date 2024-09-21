@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const display = document.getElementById('display');
     const buttons = document.querySelectorAll('.button');
     let currentValue = '0';
-    let previousValue = '';
     let operator = null;
 
     buttons.forEach(button => {
@@ -21,8 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function handleNumber(number) {
-        // console.log(previousValue, currentValue)
-        // if (currentValue === '0' || (operator && previousValue === currentValue)) {
         if (currentValue === '0') {
             currentValue = number;
         } else {
@@ -34,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
         switch (action) {
             case 'clear':
                 currentValue = '0';
-                previousValue = '';
                 operator = null;
                 break;
             case 'backspace':
@@ -65,21 +61,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 // если уже есть какой-то знак
                 if(operator) {
                     const parts = currentValue.split(getOperatorSymbol(operator));
-                // debugger
                     if (parts[1] || parts[1] === '0') { 
                         calculate();
                     }
                     //замена знака
                     // Если последний символ - это оператор
                     if (['+', '-', '*', '/'].includes(currentValue[currentValue.length-1])) {
-                    // if (operator !== action) {
                         currentValue = currentValue.substring(0, currentValue.length - 1) + getOperatorSymbol(action)
                     }
+                    // иначе, если знака нету, то добавить в конец строки
                     else {
                         currentValue = currentValue + getOperatorSymbol(action)
                     }
                     operator = action
                 }
+                // если еще нету правой части выражения, а заполняем только левую
                 else {
                     if(currentValue === '0' && action === 'subtract') {
                         currentValue = '-'
@@ -88,41 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         operator = action
                     }
                 }
-                // если повторно нажали на действие
-                // if (operator) {
-                //     // console.log(currentValue)
-                //     // debugger
-                //     const parts = currentValue.split(getOperatorSymbol(operator));
-                //     if (parts[1] || parts[1] === '0') { 
-                //         calculate();
-                //         operator = action;
-                //         break;
-                //     }
-                //     if (operator !== action) {
-                //         console.log('123213')
-                //         // замена оператора
-                //         if(currentValue[0] !== '-') {
-                //             currentValue = currentValue + getOperatorSymbol(action)
-                //         } else currentValue = currentValue.substring(0, currentValue.length - 1) + getOperatorSymbol(action)
-    
-                //         operator = action
-                //     }
-                //     operator = action;
-                // }
-                // else {
-                //     if(currentValue === '0' && action === 'subtract') {
-                //         currentValue = '-'
-                //     } else {
-                //         currentValue = currentValue + getOperatorSymbol(action)
-                //         operator = action
-                //     }
-                // }
-                // if (!operator) { 
-                // }
-                
-                // } else {
-                //     operator = action;
-                // }
                 break;
             case 'decimal':
                 if (canAddDecimal(currentValue)) {
@@ -150,7 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const parts = currentValue.split(operatorSymbol);
         if (parts.length < 2 || !parts[1]) return;
         const prev = isNegative ?  -1 * parseFloat(parts[0]) : parseFloat(parts[0]);
-        // const prev = parseFloat(parts[0])
         const current = parseFloat(parts[1]);
 
         switch (operator) {
@@ -172,7 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentValue = String(prev / current);
                 break;
         }
-        // previousValue = currentValue;
     }
 
     function getOperatorSymbol(action) {
